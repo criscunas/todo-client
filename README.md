@@ -1,5 +1,7 @@
 ## Client for [todo-server](https://github.com/criscunas/todo-server) 
 
+#### Built with Vue3 and Tailwind CSS
+
 - git clone this repository 
 - npm install 
 - enter npm run dev in your terminal to start the application on http://localhost:8080/
