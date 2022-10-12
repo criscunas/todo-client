@@ -1,29 +1,11 @@
-# todo-client
+## Client for [todo-server](https://github.com/criscunas/todo-server) 
 
-This template should help get you started developing with Vue 3 in Vite.
+- git clone this repository 
+- npm install 
+- enter npm run dev in your terminal to start the application on http://localhost:8080/
 
-## Recommended IDE Setup
+#### Additional notes
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+Notifications could be used for notifying whether or not an action was successful or not. [vue3-otification](https://github.com/kyvg/vue3-notification) is one I use. 
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+Example. Trigger the error notification in the catch() of axios calls.
