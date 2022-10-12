@@ -8,6 +8,6 @@
 
 #### Additional notes
 
-Notifications could be used for notifying whether or not an action was successful or not. [vue3-otification](https://github.com/kyvg/vue3-notification) is one I use. 
+Notifications could be used for notifying whether or not an action was successful. [vue3-notification](https://github.com/kyvg/vue3-notification) is one I use often.
 
 Example. Trigger the error notification in the catch() of axios calls.
