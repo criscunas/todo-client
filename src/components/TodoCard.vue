@@ -9,18 +9,8 @@
     </div>
 </template>
 
-<script>
-
-    export default {
-        name: "TodoCard",
-
-        props: {
-            description: {
-                type: String,
-            },
-            status: {
-                type: String,
-            }
-        },
-    }
+<script setup>
+    defineProps({
+        description: String,
+    })
 </script>

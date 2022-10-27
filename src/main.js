@@ -12,6 +12,10 @@ const axiosInstance = axios.create({
     },
 })
 
-app.config.globalProperties.$axios = axiosInstance
+// app.config.globalProperties.$axios = axiosInstance
+
+app.provide(
+    'axios', axiosInstance
+)
 
 app.mount('#app')

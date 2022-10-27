@@ -13,7 +13,7 @@
                     />
                     <div class="flex justify-between my-4">
                         <div>
-                           <p v-show="formError" class="text-red-500">Required field</p>
+                           <p v-show="values.error" class="text-red-500">Required field</p>
                         </div>
                         <button @click="createTodo" class="px-3 py-1 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-sm rounded">
                             Submit
@@ -26,8 +26,8 @@
                     <TodoSection
                         :finished="completed"
                         :inProgress="todos"
-                        @delete-todo="onDeleteTodo"
-                        @update-todo="onUpdateTodo"
+                        @delete-todo="deleteTodo"
+                        @update-todo="updateTodo"
                     />
                 </div>
             </div>
@@ -35,87 +35,83 @@
     </div>
 </template>
 
+<script setup>
+    import TodoSection from './components/TodoSection.vue';
+    import { ref, onMounted } from 'vue';
+    import { inject } from 'vue'
 
-<script>
-import TodoSection from '@/components/TodoSection.vue'
+    const axios = inject('axios')
 
-export default {
+    const values = ref({
+        description: '',
+        error: false
+    })
 
-    components : {
-        TodoSection,
-    },
+    let todos = ref([])
+    let completed = ref([])
 
-    data() {
-        return {
-            todos: [],
-            completed: [],
 
-            values: {
-                description: '',
-            },
+    const createTodo = () => {
+        const {value} = values
 
-            formError: false,
+        if (!value.description) {
+            return value.error = true
         }
-    },
 
-    created() {
-        this.getTodos()
-    },
+        else {
+            value.error = false
 
-    methods: {
-        getTodos() {
-            this.$axios.get('/todo/all').then(({data}) => {
-                this.todos = data.payload.filter((item) => item.is_completed === false)
-                this.completed = data.payload.filter((item) => item.is_completed === true)
+            axios.post('/todo/create', {
+                description: value.description
+            }).then(({data}) => {
+                console.log(data)
+                todos.value = data.todos.filter((item) => item.is_completed === false)
+                completed.value = data.todos.filter((item) => item.is_completed === true)
+
             }).catch((error) => {
                 console.log(error)
             })
-        },
-        createTodo() {
-            if (!this.values.description) {
-                this.formError = true
-            }
 
-            else {
-                this.formError = false
-
-                this.$axios.post('/todo/create', {
-                    description: this.values.description
-                }).then(({data}) => {
-                    this.todos = data.todos.filter((item) => item.is_completed === false)
-                    this.values.description = ''
-                }).catch((error) => {
-                    console.log(error)
-                })
-            }
-        },
-
-        onDeleteTodo({id, status}) {
-            this.$axios.delete(`/todo/delete/${id}`).then(() => {
-                if (status === false) {
-                    this.todos = this.todos.filter(item => item.id !== id)
-                }
-                if(status === true) {
-                    this.completed = this.completed.filter(item => item.id !== id)
-                }
-            }).catch((error) => {
-                console.log(error)
-            })
-        },
-
-        onUpdateTodo({id}) {
-            this.$axios.put(`/todo/update/${id}`).then(() => {
-                let updated = this.todos.find(item => item.id === id)
-                updated.is_completed = true
-                this.completed.push(updated)
-                this.todos = this.todos.filter(item => item.id !== id)
-            }).catch((error) => {
-                console.log(error)
-            })
         }
     }
 
+    const getTodos = () => {
+        return axios.get('/todo/all').then(({data}) => {
+            completed.value = data.payload.filter((item) => item.is_completed === true)
+            todos.value = data.payload.filter((item) => item.is_completed === false)
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
 
-}
+    const deleteTodo = ({id, status}) => {
+        axios.delete(`/todo/delete/${id}`).then(() => {
+            if (status === false) {
+                todos.value = todos.value.filter(item => item.id !== id)
+            }
+            if(status === true) {
+                completed.value = completed.value.filter(item => item.id !== id)
+            }
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
+
+    const updateTodo = ({id}) => {
+        axios.put(`/todo/update/${id}`).then(() => {
+            let updated = todos.value.find(item => item.id === id)
+            updated.is_completed = true
+            completed.value.push(updated)
+            todos.value = todos.value.filter(item => item.id !== id)
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
+
+    onMounted(() => {
+        getTodos()
+    })
+
 </script>
+
 

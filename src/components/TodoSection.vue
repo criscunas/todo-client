@@ -35,45 +35,31 @@
     </div>
 </template>
 
-<script>
-import TodoCard from './TodoCard.vue'
+<script setup>
 
-export default {
-    name: 'TodoSection',
+    import TodoCard from './TodoCard.vue';
 
-    components: {
-        TodoCard,
-        TodoCard
-    },
+    defineProps({
+        inProgress: Object,
+        finished: Object,
+    })
 
-    props: {
-        inProgress: {
-            type: Object,
-        },
-
-        finished: {
-            type: Object,
-        }
-    },
-
-    emits: [
+    const emit = defineEmits([
         'delete-todo',
         'update-todo'
-    ],
+    ])
 
-    methods: {
-        deleteTodo(id, status) {
-            this.$emit('delete-todo', {
-                id: id,
-                status: status
-            })
-        },
-        updateTodo(id) {
-            this.$emit('update-todo', {
-                id: id
-            })
-        },
-    },
+    const deleteTodo = (id, status) => {
+        emit('delete-todo', {
+            id: id,
+            status: status
+        })
+    }
 
-}
+    const updateTodo = (id) => {
+        emit('update-todo', {
+            id: id
+        })
+    }
+
 </script>
